@@ -1,0 +1,49 @@
+.paginationBlock{
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  .paginationListItem{
+    color: black;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+
+    &:hover{
+      color: white;
+      background-color: #dedede;
+    }
+  }
+  .arrows{
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    cursor: pointer;
+
+    &:hover{
+      color: white;
+      background-color: #dedede;
+    }
+  }
+  .active{
+    color: white;
+    background-color: #337ab7;
+    border-color: #337ab7;
+
+    &:hover{
+      color: white;
+      background-color: #337ab7;
+      border-color: #337ab7;
+    }
+  }
+  .blocked{
+    cursor: not-allowed;
+  }
+}

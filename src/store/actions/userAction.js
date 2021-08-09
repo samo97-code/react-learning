@@ -8,14 +8,25 @@ export const fetchUsers = (payload) => {
       const page = payload?.page ? payload.page : 1
       const sort = payload?.sort ? payload.sort : "id"
       const order = payload?.order ? payload.order : "desc"
+      const filterFistName = payload?.filter ? payload.filter : ""
       const response = await axios.get(
-        `http://localhost:8081/users?_sort=${sort}&_order=${order}&_page=${page}&_limit=${limit}`
+        `http://localhost:8081/users?_sort=${sort}&_order=${order}&_page=${page}&_limit=${limit}&firstName_like=${filterFistName}`
       )
       // console.log(response.headers["x-total-count"], "response")
       return dispatch({
         type: GET_USERS,
         payload: response,
       })
+    } catch (e) {
+      console.log(e.message)
+    }
+  }
+}
+
+export const fetchAllUsers = () => {
+  return async () => {
+    try {
+      return await axios.get(`http://localhost:8081/users`)
     } catch (e) {
       console.log(e.message)
     }

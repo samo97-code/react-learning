@@ -1,10 +1,37 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import styles from "./Pagination.module.scss"
+import { useSelector } from "react-redux"
 
-const Pagination = ({ options, totalItems, paginate }) => {
+const Pagination = ({ options, setOptions }) => {
+  const users = useSelector((state) => state.users.users)
+  const totalCount = useSelector((state) => state.users.totalCount)
+  const [pagination, setPagination] = useState(0)
+
+  useEffect(() => {
+    setPagination(Math.ceil(totalCount / options.limit))
+  }, [users])
+
+  const paginate = (count) => {
+    let value = 0
+    if (options.page !== count) {
+      if (count === "next" && options.page !== pagination) {
+        value = options.page + 1
+      } else if (count === "prev" && options.page !== 1) {
+        value = options.page - 1
+      } else value = count
+
+      if (typeof value === "number") {
+        setOptions((prevState) => ({
+          ...prevState,
+          page: value,
+        }))
+      }
+    }
+  }
+
   const paginationCount =
-    totalItems &&
-    [...Array(totalItems)].map((item, index) => {
+    pagination &&
+    [...Array(pagination)].map((item, index) => {
       return (
         <li
           key={index}
@@ -37,7 +64,7 @@ const Pagination = ({ options, totalItems, paginate }) => {
             <li
               className={[
                 styles.arrows,
-                options.page === totalItems ? styles.blocked : "",
+                options.page === pagination ? styles.blocked : "",
               ].join(" ")}
               onClick={() => paginate("next")}
             >

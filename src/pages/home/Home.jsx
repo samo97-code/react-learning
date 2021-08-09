@@ -1,48 +1,29 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchUsers, deleteUser } from "../../store/actions/userAction"
 import Loading from "../../components/loading/Loading"
 import Pagination from "../../components/pagination/Pagination"
+import UserSlider from "../../components/slider/UserSlider"
 import styles from "./Home.module.scss"
 
 const Home = () => {
   const dispatch = useDispatch()
+
   const users = useSelector((state) => state.users.users)
   const totalCount = useSelector((state) => state.users.totalCount)
 
-  const [pagination, setPagination] = useState(0)
+  const [showCounter, setShowCounter] = useState(false)
   const [options, setOptions] = useState({
     sort: "id",
     order: "desc",
     page: 1,
     limit: 5,
+    filter: "",
   })
 
   useEffect(() => {
     dispatch(fetchUsers(options))
   }, [options])
-
-  useEffect(() => {
-    setPagination(Math.ceil(totalCount / options.limit))
-  }, [users])
-
-  const paginate = (count) => {
-    let value = 0
-    if (options.page !== count) {
-      if (count === "next" && options.page !== pagination) {
-        value = options.page + 1
-      } else if (count === "prev" && options.page !== 1) {
-        value = options.page - 1
-      } else value = count
-
-      if (typeof value === "number") {
-        setOptions((prevState) => ({
-          ...prevState,
-          page: value,
-        }))
-      }
-    }
-  }
 
   const formatText = (text) => {
     return text?.length > 50 ? text.slice(0, 50) + "..." : text
@@ -59,27 +40,29 @@ const Home = () => {
     }))
   }
 
-  const usersTable = users?.map((user) => {
-    return (
-      <tr key={user.id}>
-        <th scope="row">{user.id}</th>
-        <td>{user.firstName}</td>
-        <td>{user.lastName}</td>
-        <td>{user.email}</td>
-        <td>{user.age}</td>
-        <td>{user.gender}</td>
-        <td>{formatText(user.description)}</td>
-        <td>
-          <button
-            className="btn btn-danger"
-            onClick={() => userDelete(user.id)}
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    )
-  })
+  const usersTable = useMemo(() => {
+    return users?.map((user) => {
+      return (
+        <tr key={user.id}>
+          <th scope="row">{user.id}</th>
+          <td>{user.firstName}</td>
+          <td>{user.lastName}</td>
+          <td>{user.email}</td>
+          <td>{user.age}</td>
+          <td>{user.gender}</td>
+          <td>{formatText(user.description)}</td>
+          <td>
+            <button
+              className="btn btn-danger"
+              onClick={() => userDelete(user.id)}
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      )
+    })
+  }, [users])
 
   return (
     <div className="container">
@@ -127,6 +110,24 @@ const Home = () => {
             <option value="15">15</option>
             <option value="20">20</option>
           </select>
+
+          <input
+            className="form-control ml-4"
+            type="text"
+            name="filter"
+            placeholder="Filter by name"
+            onInput={(e) => userOptions(e)}
+          />
+        </div>
+
+        <div className="">
+          <button
+            className="btn btn-info"
+            onClick={() => setShowCounter((prevState) => !prevState)}
+          >
+            Show Count
+          </button>
+          {showCounter ? <h4>We have {totalCount} users</h4> : null}
         </div>
 
         <table className="table">
@@ -147,12 +148,9 @@ const Home = () => {
           </tbody>
         </table>
 
-        <Pagination
-          options={options}
-          totalItems={pagination}
-          paginate={paginate}
-        />
+        <Pagination options={options} setOptions={setOptions} />
       </div>
+      <UserSlider />
     </div>
   )
 }

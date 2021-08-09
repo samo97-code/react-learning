@@ -18,6 +18,7 @@ module.exports = {
   },
   plugins: ["react", "prettier"],
   rules: {
+    "react/display-name": [2],
     "react/prop-types": 0,
     "react/no-unescaped-entities": 0,
     "react/jsx-no-comment-textnodes": 0,

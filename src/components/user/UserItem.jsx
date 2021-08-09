@@ -36,7 +36,7 @@ const UserItem = ({ user }) => {
 
 const UserItemWrapper = styled.div`
   background: #f3f3f3;
-  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.2);
+  //box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.2);
   width: 300px;
   padding: 16px;
   border-radius: 7px;

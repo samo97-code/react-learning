@@ -22,12 +22,13 @@ const userReducers = (state = initialState, action) => {
     case DELETE_USER:
       return {
         ...state,
-        users: state.users?.filter((item) => item.id !== action.payload),
+        users: state.users.filter((item) => item.id !== action.payload),
       }
     case CREATE_USER:
       return {
         ...state,
         users: [...state.users, action.payload],
+        totalCount: state.totalCount + 1,
       }
     default:
       return state

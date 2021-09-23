@@ -1,5 +1,3 @@
-// import logo from "../public/img/logo.svg"
-// import "./App.css"
 import "./App.scss"
 import MainLayout from "./layouts/MainLayout"
 import Routing from "./components/Routing"

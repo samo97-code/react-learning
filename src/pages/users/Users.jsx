@@ -20,12 +20,14 @@ const Users = () => {
     dispatch(fetchUsers(options))
   }, [options])
 
-  const userItem = users?.map((user) => {
-    return <UserItem key={user.id} user={user} />
-  })
+  const userItem =
+    users &&
+    users.map((user) => {
+      return <UserItem key={user.id} user={user} />
+    })
 
   return (
-    <div className="container">
+    <div className="container" style={{ marginTop: "40px" }}>
       <div className="row">
         {users && users.length ? userItem : <Loading />}
       </div>

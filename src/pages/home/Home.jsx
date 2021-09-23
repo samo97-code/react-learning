@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchUsers, deleteUser } from "../../store/actions/userAction"
 import Loading from "../../components/loading/Loading"
 import Pagination from "../../components/pagination/Pagination"
 import UserSlider from "../../components/slider/UserSlider"
 import styles from "./Home.module.scss"
+import Modal from "../../components/modal/Modal"
 
 const Home = () => {
   const dispatch = useDispatch()
@@ -26,7 +27,7 @@ const Home = () => {
   }, [options])
 
   const formatText = (text) => {
-    return text?.length > 50 ? text.slice(0, 50) + "..." : text
+    return text && text.length > 50 ? text.slice(0, 50) + "..." : text
   }
 
   const userDelete = (id) => {
@@ -41,42 +42,45 @@ const Home = () => {
   }
 
   const usersTable = useMemo(() => {
-    return users?.map((user) => {
-      return (
-        <tr key={user.id}>
-          <th scope="row">{user.id}</th>
-          <td>{user.firstName}</td>
-          <td>{user.lastName}</td>
-          <td>{user.email}</td>
-          <td>{user.age}</td>
-          <td>{user.gender}</td>
-          <td>{formatText(user.description)}</td>
-          <td>
-            <button
-              className="btn btn-danger"
-              onClick={() => userDelete(user.id)}
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      )
-    })
+    return (
+      users &&
+      users.map((user) => {
+        return (
+          <tr key={user.id}>
+            <th scope="row">{user.id}</th>
+            <td>{user.firstName}</td>
+            <td>{user.lastName}</td>
+            <td>{user.email}</td>
+            <td>{user.age}</td>
+            <td>{user.gender}</td>
+            <td>{formatText(user.description)}</td>
+            <td>
+              <button
+                className="btn btn-danger"
+                onClick={() => userDelete(user.id)}
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        )
+      })
+    )
   }, [users])
 
   return (
     <div className="container">
       <div className={[styles.homeContainer, "row"].join(" ")}>
+        <Modal />
+
         <div className={styles.selectBlocks}>
           <select
             name="sort"
             className="form-control"
             id="exampleFormControlSelect1"
+            defaultValue={"id"}
             onChange={(e) => userOptions(e)}
           >
-            <option value="" selected disabled hidden>
-              Sorting
-            </option>
             <option value="id">Id</option>
             <option value="firstName">First name</option>
             <option value="lastName">Last name</option>
@@ -87,11 +91,9 @@ const Home = () => {
             name="order"
             className="form-control ml-4"
             id="exampleFormControlSelect2"
+            defaultValue={"asc"}
             onChange={(e) => userOptions(e)}
           >
-            <option value="" selected disabled hidden>
-              Order
-            </option>
             <option value="asc">Asc</option>
             <option value="desc">Desc</option>
           </select>
@@ -100,11 +102,9 @@ const Home = () => {
             name="limit"
             className="form-control ml-4"
             id="exampleFormControlSelect3"
+            defaultValue={"5"}
             onChange={(e) => userOptions(e)}
           >
-            <option value="" selected disabled hidden>
-              Limit
-            </option>
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="15">15</option>

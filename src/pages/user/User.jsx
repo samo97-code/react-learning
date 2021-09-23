@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useLayoutEffect, useMemo } from "react"
 import { useParams } from "react-router"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchUserById } from "../../store/actions/userAction"
@@ -12,10 +12,10 @@ const User = () => {
 
   useEffect(() => {
     dispatch(fetchUserById(params.id))
-  }, [])
+  }, [params.id])
 
   return (
-    <div className="container">
+    <div className="container" style={{ marginTop: "40px" }}>
       <div className="">
         <h5>
           Thanks {user.firstName} {user.lastName} for connecting to our project

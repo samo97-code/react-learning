@@ -1,6 +1,12 @@
 import axios from "axios"
 import { GET_USERS, GET_USER, DELETE_USER, CREATE_USER } from "../types/type"
 
+const url =
+  process.env.NODE_ENV === "production"
+    ? "https://user-filter-search-paginate-3snd.vercel.app"
+    : "http://localhost"
+const port = process.env.PORT || 8081
+
 export const fetchUsers = (payload) => {
   return async (dispatch) => {
     try {
@@ -10,7 +16,7 @@ export const fetchUsers = (payload) => {
       const order = payload?.order ? payload.order : "desc"
       const filterFistName = payload?.filter ? payload.filter : ""
       const response = await axios.get(
-        `http://localhost:8081/users?_sort=${sort}&_order=${order}&_page=${page}&_limit=${limit}&firstName_like=${filterFistName}`
+        `${url}:${port}/users?_sort=${sort}&_order=${order}&_page=${page}&_limit=${limit}&firstName_like=${filterFistName}`
       )
       // console.log(response.headers["x-total-count"], "response")
       return dispatch({
@@ -26,7 +32,7 @@ export const fetchUsers = (payload) => {
 export const fetchAllUsers = () => {
   return async () => {
     try {
-      return await axios.get(`http://localhost:8081/users`)
+      return await axios.get(`${url}:${port}/users`)
     } catch (e) {
       console.log(e.message)
     }
